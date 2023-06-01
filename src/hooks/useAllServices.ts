@@ -188,7 +188,12 @@ const useAllServices = () => {
           Promise.all(
             data.map(async (bundleNav) => ({
               ...bundleNav,
-              links: (await Promise.all(bundleNav.links.map(evaluateVisibility))).filter(({ isHidden }) => !isHidden),
+              links: (await Promise.all(bundleNav.links.map(evaluateVisibility))).filter(({ isHidden, isFavoritable }) => {
+                if (isHidden && !isFavoritable) {
+                  return false;
+                }
+                return true;
+              }),
             }))
           )
         ),
